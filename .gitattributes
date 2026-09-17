@@ -1,8 +1,8 @@
+# Text normalises to LF, so the schema and the specification read the same on
+# every platform. Later rules win, so the binary overrides follow.
+* text=auto eol=lf
+
 # Conformance packages are byte-exact test data. Any line-ending translation
 # would change their checksums and break the expectations they encode.
 *.mdpack binary
 *.png binary
-
-# Everything else is text and normalises to LF, so the schema and the
-# specification read the same on every platform.
-* text=auto eol=lf
