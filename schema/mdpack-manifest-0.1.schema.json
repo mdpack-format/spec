@@ -1,0 +1,129 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mdpack-format.github.io/spec/schema/mdpack-manifest-0.1.schema.json",
+  "title": "MDPack manifest (mdpack.json), specification 0.1.0-draft",
+  "description": "Structural schema for the manifest of an MDPack package. This schema is a convenience for tooling and cannot express every requirement of the specification: checksum correctness, byte lengths, and the correspondence between declared assets and actual archive entries all require reading the container. Where this schema and the specification disagree, the specification governs.",
+  "type": "object",
+  "required": ["format", "version", "entrypoint", "assets"],
+  "properties": {
+    "format": {
+      "description": "Format identifier. Compared case-sensitively (specification 0.1, section 4.4).",
+      "const": "mdpack"
+    },
+    "version": {
+      "description": "Specification version the package was written against (section 4.5).",
+      "const": "0.1.0-draft"
+    },
+    "entrypoint": {
+      "description": "Path of the entry document. Fixed in this version (section 4.6).",
+      "const": "document.md"
+    },
+    "assets": {
+      "description": "Asset declarations; may be empty (section 4.7).",
+      "type": "array",
+      "items": { "$ref": "#/$defs/asset" }
+    },
+    "id": {
+      "description": "Stable package identifier (section 5).",
+      "$ref": "#/$defs/identifier"
+    },
+    "title": {
+      "description": "Display name. Readers fall back to the file name without the extension.",
+      "type": "string"
+    },
+    "description": {
+      "description": "Short human-readable summary.",
+      "type": "string"
+    },
+    "createdAt": {
+      "description": "Creation time, RFC 3339 UTC with a Z suffix (section 4.8).",
+      "$ref": "#/$defs/timestamp"
+    },
+    "modifiedAt": {
+      "description": "Last save time, RFC 3339 UTC with a Z suffix (section 4.8).",
+      "$ref": "#/$defs/timestamp"
+    },
+    "generator": {
+      "description": "Application that last wrote the package. Diagnostics only.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "version": { "type": "string" }
+      },
+      "required": ["name"]
+    },
+    "markdownDialect": {
+      "description": "Declared Markdown dialect, used only as a rendering hint (section 11.1).",
+      "type": "string",
+      "examples": ["commonmark", "gfm"]
+    },
+    "documentSha256": {
+      "description": "SHA-256 of the raw bytes of document.md. Verified when present (section 7).",
+      "$ref": "#/$defs/sha256"
+    }
+  },
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64,
+      "pattern": "^[A-Za-z0-9._-]+$"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(\\.[0-9]+)?Z$"
+    },
+    "assetPath": {
+      "description": "Relative archive path under assets/. Rejects traversal, absolute paths, drive letters and backslashes (sections 4.7 and 8.2).",
+      "type": "string",
+      "minLength": 8,
+      "maxLength": 1024,
+      "pattern": "^assets/(?!.*(?:^|/)\\.\\.?(?:/|$))[^\\\\:\\u0000-\\u001F\\u007F]+$"
+    },
+    "asset": {
+      "type": "object",
+      "required": ["id", "path", "mediaType", "bytes", "sha256", "role"],
+      "properties": {
+        "id": {
+          "description": "Unique within the assets array (section 4.7).",
+          "$ref": "#/$defs/identifier"
+        },
+        "path": { "$ref": "#/$defs/assetPath" },
+        "mediaType": {
+          "description": "Declared media type. Never trusted for rendering (section 8.5).",
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9!#$&^_.+-]{0,126}/[a-zA-Z0-9][a-zA-Z0-9!#$&^_.+-]{0,126}$"
+        },
+        "bytes": {
+          "description": "Uncompressed length in bytes; verified against the archive entry (section 4.7).",
+          "type": "integer",
+          "minimum": 0
+        },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "role": {
+          "description": "Descriptive usage hint. Unknown values are ignored, not rejected (section 4.9).",
+          "type": "string",
+          "anyOf": [
+            { "enum": ["inline", "attachment", "cover", "source", "derived"] },
+            { "type": "string" }
+          ]
+        },
+        "originalName": {
+          "description": "Source file name, when the stored name had to be altered (section 6.7).",
+          "type": "string"
+        },
+        "width": { "type": "integer", "minimum": 0 },
+        "height": { "type": "integer", "minimum": 0 },
+        "description": {
+          "description": "Alternative text or caption hint.",
+          "type": "string"
+        }
+      }
+    }
+  }
+}
