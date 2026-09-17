@@ -54,7 +54,7 @@ a walled garden you have to escape from. Unzipping one is the export.
 | Implementation | Language | Conformance | Notes |
 |---|---|---|---|
 | MD Vault | C# / .NET | Reader, Writer, Round-trip-preserving | Reference implementation |
-| MD Reader Pro | C# / .NET | Reader, Writer | Viewer and light editor |
+| MD Reader Pro | C# / .NET | Reader, Writer, Round-trip-preserving | Viewer and light editor |
 
 Built something? Open a pull request adding it here. The only requirement is that it passes the
 [conformance corpus](tests/).
