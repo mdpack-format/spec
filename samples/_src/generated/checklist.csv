@@ -1,0 +1,5 @@
+step,task,status
+1,Write Markdown with relative asset links,done
+2,Declare every asset in mdpack.json,done
+3,Verify bytes and sha256,done
+4,Ship one .mdpack file,ready

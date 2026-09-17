@@ -31,6 +31,8 @@ concrete failing case are hard to evaluate.
   decision process in [GOVERNANCE.md](GOVERNANCE.md).
 - **New implementations** in the README table: one row, plus a note on which conformance classes
   you claim. Please make sure the corpus passes first.
+- **Sample packages** under [`samples/`](samples/): keep notes in English, declare every asset,
+  and rebuild with `node tools/build-samples.mjs` so checksums stay honest.
 
 Keep the diff focused. A PR that fixes a typo and also restructures a section is two PRs.
 

@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="280" viewBox="0 0 720 280" role="img" aria-label="Relative asset paths inside an MDPack">
+  <rect width="720" height="280" fill="#F7F4EC"/>
+  <text x="36" y="42" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="22" font-weight="700" fill="#1F2933">Relative paths, same everywhere</text>
+  <text x="36" y="72" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="14" fill="#52606D">In the package and after unzip  one Markdown reference</text>
+
+  <rect x="36" y="100" width="300" height="140" rx="14" fill="#FFFFFF" stroke="#CBD2D9" stroke-width="2"/>
+  <text x="56" y="132" font-family="Consolas, Menlo, monospace" font-size="15" fill="#102A43">document.md</text>
+  <text x="56" y="168" font-family="Consolas, Menlo, monospace" font-size="14" fill="#0E7C66">![Star](assets/star.png)</text>
+  <text x="56" y="200" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="13" fill="#829AB1">ordinary relative path</text>
+
+  <path d="M350 170 H390" stroke="#0E7C66" stroke-width="3" marker-end="url(#arrow)"/>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#0E7C66"/>
+    </marker>
+  </defs>
+
+  <rect x="400" y="100" width="284" height="140" rx="14" fill="#FFFFFF" stroke="#CBD2D9" stroke-width="2"/>
+  <text x="420" y="132" font-family="Consolas, Menlo, monospace" font-size="15" fill="#102A43">assets/</text>
+  <circle cx="448" cy="178" r="18" fill="#F7C948"/>
+  <polygon points="448,162 454,174 468,176 458,186 460,200 448,192 436,200 438,186 428,176 442,174" fill="#F0B429"/>
+  <text x="478" y="184" font-family="Consolas, Menlo, monospace" font-size="14" fill="#102A43">star.png</text>
+</svg>

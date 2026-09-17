@@ -6,3 +6,4 @@
 # would change their checksums and break the expectations they encode.
 *.mdpack binary
 *.png binary
+*.pdf binary

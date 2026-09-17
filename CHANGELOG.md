@@ -37,7 +37,14 @@ relative-path reference model.
 
 - [JSON Schema](schema/mdpack-manifest-0.1.schema.json) for `mdpack.json`.
 - A [conformance corpus](tests/) of 41 packages with machine-readable expectations.
+- [Illustrative samples](samples/) (`hello-star`, `why-mdpack`, `package-anatomy`, `kitchen-sink`).
 - A [reserved names registry](registry.md).
+
+### Samples update — 2026-09-17 (same draft)
+
+Added English-language sample packages under [`samples/`](samples/) with shared star artwork,
+generated diagrams, an SVG figure, a CSV source file and a tiny PDF attachment. Rebuild with
+`node tools/build-samples.mjs`.
 
 ### Notes for readers of the originally circulated 0.1.0 draft
 

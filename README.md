@@ -46,6 +46,8 @@ a walled garden you have to escape from. Unzipping one is the export.
 - [JSON Schema for `mdpack.json`](schema/mdpack-manifest-0.1.schema.json)
 - [Conformance corpus](tests/) — 41 packages, valid and deliberately malformed, with expected
   outcomes
+- [Sample packages](samples/) — illustrative `.mdpack` notes with real images (start with
+  [`hello-star.mdpack`](samples/hello-star.mdpack))
 - [Reserved names registry](registry.md)
 - [Changelog](CHANGELOG.md)
 
