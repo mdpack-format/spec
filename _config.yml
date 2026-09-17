@@ -1,0 +1,19 @@
+# GitHub Pages configuration for https://mdpack-format.github.io/spec/
+#
+# The specification cites that address as its published location (Appendix A), so
+# the site has to serve the documents rather than offer them for download. The
+# jekyll-relative-links plugin ships enabled on GitHub Pages and rewrites links
+# between .md files to their rendered pages, which is what keeps the same
+# Markdown readable both here and on github.com.
+
+title: MDPack
+description: An open, portable package format for Markdown content and its associated assets.
+theme: jekyll-theme-primer
+
+# Tooling and licence text are not documents anyone reads as a web page.
+exclude:
+  - tools/
+  - LICENSE-CODE
+  - LICENSE-SPEC
+  - .gitattributes
+  - .gitignore
