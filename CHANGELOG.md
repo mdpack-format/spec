@@ -5,6 +5,33 @@ All notable changes to the MDPack specification are recorded here.
 The specification version and the manifest `version` member are the same string. Before 1.0 any
 release may change the format incompatibly; see [GOVERNANCE.md](GOVERNANCE.md).
 
+## 0.2.0-draft — 2026-10-24
+
+Additive revision: every package valid under 0.1 remains valid under 0.2 with exactly the same
+meaning. The only new construct is the optional manifest member `encryption`.
+
+### Added
+
+- **Encryption profile `mdpack-enc-1`** (§13): password-based AES-256-GCM encryption of the entry
+  document, the assets and the full inner manifest inside a single reserved `payload.mdpe` entry;
+  the clear manifest carries no user content. PBKDF2-HMAC-SHA256 at ≥600 000 iterations,
+  HKDF-SHA256 per-frame keys, AEAD associated data binding each frame to its entry path, and
+  256-byte frame padding to hide exact sizes.
+- **`payload.mdpe`** added to the reserved root names (§3.5) and the registry.
+- **New reader failure mode** `encrypted-unsupported` (§8.9).
+- **`encryption`** added to the reserved manifest members.
+- A **Conforming Encrypted-Profile Reader** conformance class (§13.8).
+- **Schema 0.2** (`schema/mdpack-manifest-0.2.schema.json`) validating both unencrypted and
+  encrypted manifests.
+
+### Changed
+
+- A 0.2 reader accepts manifest versions `0.1.0-draft`, `0.1.0`, `0.2.0-draft` and `0.2.0` for
+  unencrypted packages (§4.5). Encrypted packages pin 0.2, so a 0.1 reader reports
+  `unsupported-version` rather than corruption.
+- The ZIP-level ban on encrypted entries (§3.1) is restated to cover ZIP crypto only; the
+  profile’s own mechanism is declared, verified and separate.
+
 ## 0.1.0-draft — 2026-09-17
 
 First public draft. Establishes the name, the container layout, the manifest shape and the
