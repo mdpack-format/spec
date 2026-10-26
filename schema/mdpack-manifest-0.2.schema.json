@@ -1,0 +1,198 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mdpack-format.github.io/spec/schema/mdpack-manifest-0.2.schema.json",
+  "title": "MDPack manifest (mdpack.json), specification 0.2.0-draft",
+  "description": "Structural schema for the manifest of an MDPack package. Extends 0.1 with the optional encryption member (profile mdpack-enc-1) and validates manifests written against 0.1 or 0.2. This schema is a convenience for tooling and cannot express every requirement of the specification: checksum correctness, byte lengths, the correspondence between declared assets and actual archive entries, and all payload-level (decrypted) rules require reading the container. Where this schema and the specification disagree, the specification governs.",
+  "type": "object",
+  "required": ["format", "version", "entrypoint", "assets"],
+  "properties": {
+    "format": {
+      "description": "Format identifier. Compared case-sensitively (specification §4.4).",
+      "const": "mdpack"
+    },
+    "version": {
+      "description": "Specification version the package was written against (§4.5). Encrypted packages (encryption member present) MUST use a 0.2 value.",
+      "enum": ["0.1.0-draft", "0.1.0", "0.2.0-draft", "0.2.0"]
+    },
+    "entrypoint": {
+      "description": "Path of the entry document. Fixed in this version (§4.6); for encrypted packages it names the logical entry inside the encrypted payload (§13.2).",
+      "const": "document.md"
+    },
+    "assets": {
+      "description": "Asset declarations; may be empty (§4.7). MUST be empty in an encrypted package (§13.2).",
+      "type": "array",
+      "items": { "$ref": "#/$defs/asset" }
+    },
+    "encryption": {
+      "description": "Presence switches the package to the encryption profile mdpack-enc-1 (§13). Must carry no unknown members in this version.",
+      "$ref": "#/$defs/encryption"
+    },
+    "id": {
+      "description": "Stable package identifier (§5). Opaque and random — not user content, so unlike title/dates it MAY appear in an encrypted package.",
+      "$ref": "#/$defs/identifier"
+    },
+    "title": {
+      "description": "Display name. Readers fall back to the file name without the extension. MUST NOT appear in an encrypted package (§13.2).",
+      "type": "string"
+    },
+    "description": {
+      "description": "Short human-readable summary. MUST NOT appear in an encrypted package (§13.2).",
+      "type": "string"
+    },
+    "createdAt": {
+      "description": "Creation time, RFC 3339 UTC with a Z suffix (§4.8). MUST NOT appear in an encrypted package (§13.2).",
+      "$ref": "#/$defs/timestamp"
+    },
+    "modifiedAt": {
+      "description": "Last save time, RFC 3339 UTC with a Z suffix (§4.8). MUST NOT appear in an encrypted package (§13.2).",
+      "$ref": "#/$defs/timestamp"
+    },
+    "generator": {
+      "description": "Application that last wrote the package. Diagnostics only. MUST NOT appear in an encrypted package (§13.2).",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "version": { "type": "string" }
+      },
+      "required": ["name"]
+    },
+    "markdownDialect": {
+      "description": "Declared Markdown dialect, used only as a rendering hint (§11.1). MUST NOT appear in an encrypted package (§13.2).",
+      "type": "string",
+      "examples": ["commonmark", "gfm"]
+    },
+    "documentSha256": {
+      "description": "SHA-256 of the raw bytes of document.md. Verified when present (§7). MUST NOT appear in an encrypted package (§13.2).",
+      "$ref": "#/$defs/sha256"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "required": ["encryption"],
+        "properties": { "encryption": { "type": "object" } }
+      },
+      "then": {
+        "properties": {
+          "version": { "enum": ["0.2.0-draft", "0.2.0"] },
+          "assets": { "maxItems": 0 }
+        },
+        "not": {
+          "anyOf": [
+            { "required": ["title"] },
+            { "required": ["description"] },
+            { "required": ["createdAt"] },
+            { "required": ["modifiedAt"] },
+            { "required": ["generator"] },
+            { "required": ["markdownDialect"] },
+            { "required": ["documentSha256"] }
+          ]
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64,
+      "pattern": "^[A-Za-z0-9._-]+$"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(\\.[0-9]+)?Z$"
+    },
+    "assetPath": {
+      "description": "Relative archive path under assets/. Rejects traversal, absolute paths, drive letters and backslashes (§4.7 and §8.2).",
+      "type": "string",
+      "minLength": 8,
+      "maxLength": 1024,
+      "pattern": "^assets/(?!.*(?:^|/)\\.\\.?(?:/|$))[^\\\\:\\u0000-\\u001F\\u007F]+$"
+    },
+    "asset": {
+      "type": "object",
+      "required": ["id", "path", "mediaType", "bytes", "sha256", "role"],
+      "properties": {
+        "id": {
+          "description": "Unique within the assets array (§4.7).",
+          "$ref": "#/$defs/identifier"
+        },
+        "path": { "$ref": "#/$defs/assetPath" },
+        "mediaType": {
+          "description": "Declared media type. Never trusted for rendering (§8.5).",
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9!#$&^_.+-]{0,126}/[a-zA-Z0-9][a-zA-Z0-9!#$&^_.+-]{0,126}$"
+        },
+        "bytes": {
+          "description": "Uncompressed length in bytes; verified against the archive entry (§4.7). In an encrypted package: plaintext length, verified after decryption (§13.6).",
+          "type": "integer",
+          "minimum": 0
+        },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "role": {
+          "description": "Descriptive usage hint. Unknown values are ignored, not rejected (§4.9).",
+          "type": "string",
+          "anyOf": [
+            { "enum": ["inline", "attachment", "cover", "source", "derived"] },
+            { "type": "string" }
+          ]
+        },
+        "originalName": {
+          "description": "Source file name, when the stored name had to be altered (§6.7).",
+          "type": "string"
+        },
+        "width": { "type": "integer", "minimum": 0 },
+        "height": { "type": "integer", "minimum": 0 },
+        "description": {
+          "description": "Alternative text or caption hint.",
+          "type": "string"
+        }
+      }
+    },
+    "encryption": {
+      "type": "object",
+      "required": ["profile", "kdf", "cipher", "payload"],
+      "additionalProperties": false,
+      "properties": {
+        "profile": {
+          "description": "The encryption profile identifier (§13).",
+          "const": "mdpack-enc-1"
+        },
+        "kdf": {
+          "type": "object",
+          "required": ["algo", "iterations", "salt"],
+          "additionalProperties": false,
+          "properties": {
+            "algo": {
+              "description": "Password key-derivation function (§13.3).",
+              "const": "pbkdf2-hmac-sha256"
+            },
+            "iterations": {
+              "description": "PBKDF2 iteration count. Readers MUST reject values below 600000 (§13.2).",
+              "type": "integer",
+              "minimum": 600000
+            },
+            "salt": {
+              "description": "Base64 (standard alphabet), 16-64 decoded bytes, fresh per package (§13.3).",
+              "type": "string",
+              "pattern": "^[A-Za-z0-9+/]+={0,2}$"
+            }
+          }
+        },
+        "cipher": {
+          "description": "Authenticated encryption (§13.5).",
+          "const": "aes-256-gcm"
+        },
+        "payload": {
+          "description": "The archive entry carrying the encrypted payload (§13.4).",
+          "const": "payload.mdpe"
+        }
+      }
+    }
+  }
+}

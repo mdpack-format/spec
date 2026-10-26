@@ -17,6 +17,7 @@ Adding an entry here follows the normative-change process in [GOVERNANCE.md](GOV
 | `thumbnails/` | directory | Reserved | 0.1 §3.5 | Preview images. `thumbnails/cover.png` is the conventional cover. |
 | `metadata/` | directory | Reserved | 0.1 §3.5 | Structured metadata for extensions. |
 | `.*` | any | Reserved | 0.1 §3.5, §3.6 | Root entries whose name begins with a dot are implementation scratch space. Not extracted, not preserved. |
+| `payload.mdpe` | file | Reserved | 0.2 §3.5, §13 | The encrypted payload of a package using the encryption profile `mdpack-enc-1`. |
 
 Any other top-level name is unclaimed. Writers may use one, and readers must both ignore it and
 preserve it (§3.6) — but claiming it here first avoids collisions.
@@ -37,6 +38,7 @@ preserve it (§3.6) — but claiming it here first avoids collisions.
 | `generator` | Reserved | 0.1 §4.4 |
 | `markdownDialect` | Reserved | 0.1 §4.4 |
 | `documentSha256` | Reserved | 0.1 §4.4 |
+| `encryption` | Reserved | 0.2 §4.4, §13 | Presence switches the package to the encryption profile `mdpack-enc-1`. |
 
 ## Asset declaration members
 

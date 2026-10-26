@@ -41,9 +41,12 @@ a walled garden you have to escape from. Unzipping one is the export.
 ## Read the specification
 
 **[mdpack-format.github.io/spec](https://mdpack-format.github.io/spec/)** — or
-[`spec/0.1/index.md`](spec/0.1/index.md) in this repository.
+[`spec/0.2/index.md`](spec/0.2/index.md) in this repository (0.1 kept
+  unchanged in [`spec/0.1/`](spec/0.1/); 0.2 adds the optional
+  [encryption profile](spec/0.2/index.md#13-encryption-profile-mdpack-enc-1)).
 
-- [JSON Schema for `mdpack.json`](schema/mdpack-manifest-0.1.schema.json)
+- [JSON Schema for `mdpack.json`](schema/mdpack-manifest-0.2.schema.json) (0.2; validates
+  unencrypted and encrypted manifests)
 - [Conformance corpus](tests/) — 41 packages, valid and deliberately malformed, with expected
   outcomes
 - [Sample packages](samples/) — illustrative `.mdpack` notes with real images (start with
@@ -76,8 +79,10 @@ Built something? Open a pull request adding it here. The only requirement is tha
 
 ## Status
 
-Specification **0.1.0-draft**. Implementable and implemented, but not yet stable: incompatible
-changes may land before 1.0. Implementations should describe their support as draft-level.
+Specification **0.2.0-draft** (0.2 adds the optional `mdpack-enc-1` encryption profile;
+unencrypted packages are unchanged). Implementable and implemented, but not yet stable:
+incompatible changes may land before 1.0. Implementations should describe their support as
+draft-level.
 
 The route to 1.0 is one release cycle of implementation feedback plus at least one independent
 implementation passing the conformance corpus. See [GOVERNANCE.md](GOVERNANCE.md).
